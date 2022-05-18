@@ -22,7 +22,7 @@ def get_status(url):
 
 
 def config():
-    with open('./config/config', 'r', encoding='utf-8') as file:
+    with open('/metrics/src/configuration/metrics.conf', 'r', encoding='utf-8') as file:
         dic = []
         for line in file.readlines():
             line = line.strip('\n')

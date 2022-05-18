@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metrics
+  name: metrics
+  namespace: default
+spec:
+  minReadySeconds: 20
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: metrics
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: metrics
+    spec:
+      containers:
+      - name: metrics
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.0.2
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests: 
+            cpu: 100m
+            memory: 128Mi
+          limits: 
+            cpu: 250m
+            memory: 512Mi
+#        volumeMounts:
+#        - name: conf
+#          mountPath: /etc/nginx/nginx.conf
+#          subPath: nginx.conf
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+#      volumes:
+#        - configMap:
+#            name: nginx-conf
+#          name: conf
+#      imagePullSecrets:
+#        - name: docker-registry
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 60
+      dnsPolicy: ClusterFirst
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: metrics
+  name: metrics
+  namespace: default
+spec:
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: metrics
+  sessionAffinity: None
+  type: ClusterIP
