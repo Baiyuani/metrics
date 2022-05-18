@@ -4,7 +4,6 @@ WORKDIR ./metrics
 
 ADD . .
 
-RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN ln -s /dev/stdout ./metrics.log
 
