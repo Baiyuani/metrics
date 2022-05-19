@@ -1,3 +1,17 @@
+apiVersion: v1
+data:
+  metrics.conf: |-
+    sso,https://oauth.shcmusic.edu.cn/sso/livez
+    bus,https://oauth.shcmusic.edu.cn/sso/liveza
+    test,https://oauth.shcmusic.edu.cn/sso/readyz
+    test1,asdasdasdasd
+kind: ConfigMap
+metadata:
+  name: metrics
+  namespace: default
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,7 +39,7 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.0.2
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.0.4
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
@@ -34,17 +48,16 @@ spec:
           limits: 
             cpu: 250m
             memory: 512Mi
-#        volumeMounts:
-#        - name: conf
-#          mountPath: /etc/nginx/nginx.conf
-#          subPath: nginx.conf
+        volumeMounts:
+        - name: metrics
+          mountPath: /metrics/src/configuration
         ports:
         - containerPort: 5000
           protocol: TCP
-#      volumes:
-#        - configMap:
-#            name: nginx-conf
-#          name: conf
+      volumes:
+        - configMap:
+            name: metrics
+          name: metrics
 #      imagePullSecrets:
 #        - name: docker-registry
       restartPolicy: Always
