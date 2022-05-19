@@ -32,7 +32,7 @@ def metrics(response=''):
     for name, url in config().items():
         code = get_status(url)
         try:
-            r = 'ketanyun_' + name + '_status{origin="ketanyun",svc=' + name + ',url=' + url + '}' + ' ' + code + '\n'
+            r = 'ketanyun_' + name + '_status{origin="ketanyun",svc="' + name + '",url="' + url + '"}' + ' ' + code + '\n'
         except:
             pass
         response += r
