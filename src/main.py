@@ -1,10 +1,15 @@
 from flask import Flask
+from gevent import pywsgi
 import requests
+from joblib import Parallel, delayed
+from loguru import logger
 
+# logger.add('../logs/metrics.log')
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
 }
 app = Flask(__name__)
+data = ''
 
 
 def get_status(url):
@@ -12,33 +17,61 @@ def get_status(url):
         response = requests.get(url, headers=headers)
         return str(response.status_code)
     except:
+        logger.error("url: %s is wrong. Unable to get status_code" % url)
         pass
 
 
-def config():
-    with open('/metrics/src/configuration/metrics.conf', 'r', encoding='utf-8') as file:
+def get_config():
+    with open('./configuration/metrics.conf', 'r', encoding='utf-8') as file:
         dic = []
         for line in file.readlines():
             line = line.strip('\n')
-            if line == '':
+            if '#' in line or line == '':
                 continue
-            b = line.split(',')
-            dic.append(b)
-    return dict(dic)
+            dic.append(line.split(','))
+    return tuple(dic)
+
+
+def fork(args):
+    handle_data(args[0], args[1])
+
+
+def handle_data(name, url):
+    global data
+    code = get_status(url)
+    try:
+        r = 'ketanyun_' + name + '_status{origin="ketanyun",svc="' + name + '",url="' + url + '"}' + ' ' + code + '\n'
+        data += r
+    except:
+        pass
+
+
+@logger.catch
+def post():
+    Parallel(n_jobs=10, backend='threading')(delayed(fork)(i) for i in config)
+    return data
 
 
 @app.route('/metrics')
-def metrics(response=''):
-    for name, url in config().items():
-        code = get_status(url)
-        try:
-            r = 'ketanyun_' + name + '_status{origin="ketanyun",svc="' + name + '",url="' + url + '"}' + ' ' + code + '\n'
-        except:
-            pass
-        response += r
-        r = ''
-    return response
+@app.route('/live')
+@app.route('/ready')
+def metrics():
+    global data
+    res = post()
+    data = ''
+    return res
+
+
+@app.route('/')
+@app.route('/start')
+def main():
+    return {'version': '0.0.7'}
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    config = get_config()
+    # app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000)
+    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
+    server.serve_forever()
+    # print(get_config())

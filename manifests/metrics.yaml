@@ -18,7 +18,7 @@ metadata:
   name: metrics
   namespace: default
 spec:
-  minReadySeconds: 20
+  minReadySeconds: 5
   progressDeadlineSeconds: 600
   revisionHistoryLimit: 10
   strategy:
@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.0.6
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.0.7
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
@@ -47,35 +47,35 @@ spec:
             cpu: 500m
             memory: 512Mi
         livenessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 30
-          periodSeconds: 30
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 60
           successThreshold: 1
           httpGet:
-            path: /metrics
+            path: /live
             port: 5000
             scheme: HTTP
           timeoutSeconds: 30
         readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 30
-          periodSeconds: 30
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 60
           successThreshold: 1
           httpGet:
-            path: /metrics
+            path: /ready
             port: 5000
             scheme: HTTP
           timeoutSeconds: 30
-#        startupProbe:
-#          failureThreshold: 3
-#          initialDelaySeconds: 30
-#          periodSeconds: 30
-#          successThreshold: 1
-#          httpGet:
-#            path: /metrics
-#            port: 5000
-#            scheme: HTTP
-#          timeoutSeconds: 30
+        startupProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          httpGet:
+            path: /start
+            port: 5000
+            scheme: HTTP
+          timeoutSeconds: 3
         volumeMounts:
         - name: metrics
           mountPath: /metrics/src/configuration
