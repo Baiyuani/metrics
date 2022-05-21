@@ -4,7 +4,7 @@ import requests
 from joblib import Parallel, delayed
 from loguru import logger
 
-# logger.add('../logs/metrics.log')
+# logger.add('/metrics/logs/metrics.log')
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
 }
@@ -22,7 +22,7 @@ def get_status(url):
 
 
 def get_config():
-    with open('./configuration/metrics.conf', 'r', encoding='utf-8') as file:
+    with open('/metrics/src/configuration/metrics.conf', 'r', encoding='utf-8') as file:
         dic = []
         for line in file.readlines():
             line = line.strip('\n')
