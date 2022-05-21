@@ -5,6 +5,7 @@ WORKDIR ./metrics
 ADD . .
 
 RUN pip install -r requirements.txt
+RUN mkdir log || true
 RUN ln -s /dev/stdout ./logs/metrics.log
 
 EXPOSE 5000
