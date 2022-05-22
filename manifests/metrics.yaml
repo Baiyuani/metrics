@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.1.3
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.1.4
         imagePullPolicy: IfNotPresent
         resources:
           requests: 

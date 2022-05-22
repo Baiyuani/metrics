@@ -22,7 +22,7 @@ def get_status(url):
 
 
 def get_config():
-    with open('./configuration/metrics.conf', 'r', encoding='utf-8') as file:
+    with open('/metrics/src/configuration/metrics.conf', 'r', encoding='utf-8') as file:
         dic = []
         for line in file.readlines():
             line = line.strip('\n')
@@ -65,7 +65,7 @@ def metrics():
 @app.route('/')
 @app.route('/start')
 def main():
-    return {'version': '0.1.3'}
+    return {'version': '0.1.4'}
 
 
 if __name__ == '__main__':
