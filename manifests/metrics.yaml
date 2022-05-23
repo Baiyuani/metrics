@@ -1,8 +1,8 @@
 apiVersion: v1
 data:
   metrics.conf: |-
-    baidu,https://www.baidu.com/
-    test,https://www.baidu.com/qwe
+    baidu: https://www.baidu.com/
+    test: https://www.baidu.com/qwe
 kind: ConfigMap
 metadata:
   name: metrics
@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:0.1.4
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:1.0.1
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
