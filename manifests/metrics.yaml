@@ -1,12 +1,11 @@
 apiVersion: v1
 data:
   metrics.conf: |-
-    baidu: https://www.baidu.com/
-    test: https://www.baidu.com/qwe
+    "web1": "http://www.dachui.com/"
 kind: ConfigMap
 metadata:
   name: metrics
-  namespace: default
+  namespace: prometheus
 
 ---
 
@@ -16,7 +15,7 @@ metadata:
   labels:
     app: metrics
   name: metrics
-  namespace: default
+  namespace: prometheus
 spec:
   minReadySeconds: 5
   progressDeadlineSeconds: 600
@@ -101,7 +100,7 @@ metadata:
   labels:
     app: metrics
   name: metrics
-  namespace: default
+  namespace: prometheus
 spec:
   ports:
   - protocol: TCP
