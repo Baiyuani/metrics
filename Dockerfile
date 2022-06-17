@@ -1,13 +1,13 @@
 FROM python:3.9
 
-WORKDIR /metrics
+WORKDIR /web_metrics
 
-ADD . .
+ADD web_metrics/* .
 
 RUN pip install -r requirements.txt
 RUN mkdir logs || true
-RUN ln -s /dev/stdout ./logs/metrics.log
+RUN ln -s /dev/stdout ./logs/web_metrics.log
 
 EXPOSE 5000
 
-CMD ["python", "./src/main.py", ">", "./logs/metrics.log"]
+CMD ["python", "/web_metrics/main.py", ">", "/web_metrics/logs/web_metrics.log"]

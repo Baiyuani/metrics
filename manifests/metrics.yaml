@@ -1,10 +1,12 @@
 apiVersion: v1
 data:
-  metrics.conf: |-
-    "web1": "http://www.dachui.com/"
+  webMetrics.conf: |-
+    urls:
+      baidu: "https://www.baidu.com"
+      nospace: 'https://www.baidu.com'
 kind: ConfigMap
 metadata:
-  name: metrics
+  name: webMetrics
   namespace: prometheus
 
 ---
@@ -13,8 +15,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: metrics
-  name: metrics
+    app: webMetrics
+  name: webMetrics
   namespace: prometheus
 spec:
   minReadySeconds: 5
@@ -27,16 +29,31 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: metrics
+      app: webMetrics
   replicas: 1
   template:
     metadata:
       labels:
-        app: metrics
+        app: webMetrics
     spec:
       containers:
-      - name: metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/metrics:1.0.1
+      - env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: WM_PORT
+          value: 5000
+        - name: WM_ENV
+          value: 'prod'
+        - name: WM_PATH
+          value: '/metrics'
+        - name: WM_THREADING_NUM
+          value: 10
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        name: webMetrics
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/web_metrics:1.0.2
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
@@ -47,7 +64,7 @@ spec:
             memory: 512Mi
         livenessProbe:
           failureThreshold: 2
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 60
           successThreshold: 1
           httpGet:
@@ -57,7 +74,7 @@ spec:
           timeoutSeconds: 30
         readinessProbe:
           failureThreshold: 2
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 60
           successThreshold: 1
           httpGet:
@@ -67,7 +84,7 @@ spec:
           timeoutSeconds: 30
         startupProbe:
           failureThreshold: 5
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 5
           successThreshold: 1
           httpGet:
@@ -76,15 +93,15 @@ spec:
             scheme: HTTP
           timeoutSeconds: 3
         volumeMounts:
-        - name: metrics
-          mountPath: /metrics/src/configuration
+        - name: webMetrics_config
+          mountPath: /webMetrics/web_webMetrics/config
         ports:
         - containerPort: 5000
           protocol: TCP
       volumes:
         - configMap:
-            name: metrics
-          name: metrics
+            name: webMetrics
+          name: webMetrics_config
 #      imagePullSecrets:
 #        - name: docker-registry
       restartPolicy: Always
@@ -98,8 +115,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: metrics
-  name: metrics
+    app: webMetrics
+  name: webMetrics
   namespace: prometheus
 spec:
   ports:
@@ -107,6 +124,6 @@ spec:
     port: 5000
     targetPort: 5000
   selector:
-    app: metrics
+    app: webMetrics
   sessionAffinity: None
   type: ClusterIP
