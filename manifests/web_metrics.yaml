@@ -54,6 +54,10 @@ spec:
               fieldPath: metadata.namespace
         - name: EX_LABELS
           value: '{label1="v1",label2="v2"}'
+        command:
+          - sh
+          - -c
+          - python /metrics/main.py > /web_metrics/logs/web_metrics.log
         name: web-metrics
         image: registry.cn-shanghai.aliyuncs.com/baiyuani/web_metrics:1.0.3
         imagePullPolicy: IfNotPresent
