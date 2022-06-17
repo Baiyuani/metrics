@@ -39,15 +39,15 @@ spec:
       containers:
       - env:
         - name: TZ
-          value: Asia/Shanghai
+          value: 'Asia/Shanghai'
         - name: WM_PORT
-          value: 5000
+          value: '5000'
         - name: WM_ENV
           value: 'prod'
         - name: WM_PATH
           value: '/metrics'
         - name: WM_THREADING_NUM
-          value: 10
+          value: '10'
         - name: NAMESPACE
           valueFrom:
             fieldRef:
