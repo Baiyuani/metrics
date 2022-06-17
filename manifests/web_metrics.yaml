@@ -97,6 +97,7 @@ spec:
         volumeMounts:
         - name: web-metrics
           mountPath: /web_metrics/urls.yaml
+          subPath: urls.yaml
         ports:
         - containerPort: 5000
           protocol: TCP
