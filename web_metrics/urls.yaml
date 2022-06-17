@@ -1,6 +1,4 @@
-urls:  # urls
-  baidu: "https://www.baidu.com" # url 1
-  nospace: 'https://www.baidu.com' # url 2
+urls:
+  baidu: "https://www.baidu.com"
+  nospace: 'https://www.baidu.com'
 #  test: 'https://www.google.com'
-
-# 注释1
