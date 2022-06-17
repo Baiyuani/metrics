@@ -52,6 +52,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: EX_LABELS
+          value: '{label1="v1",label2="v2"}'
         name: webMetrics
         image: registry.cn-shanghai.aliyuncs.com/baiyuani/web_metrics:1.0.2
         imagePullPolicy: IfNotPresent
