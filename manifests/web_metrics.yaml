@@ -1,12 +1,12 @@
 apiVersion: v1
 data:
-  web_metrics.conf: |-
+  web-metrics.conf: |-
     urls:
       baidu: "https://www.baidu.com"
       nospace: 'https://www.baidu.com'
 kind: ConfigMap
 metadata:
-  name: web_metrics
+  name: web-metrics
   namespace: prometheus
 
 ---
@@ -15,8 +15,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: web_metrics
-  name: web_metrics
+    app: web-metrics
+  name: web-metrics
   namespace: prometheus
 spec:
   minReadySeconds: 5
@@ -29,12 +29,12 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: web_metrics
+      app: web-metrics
   replicas: 1
   template:
     metadata:
       labels:
-        app: web_metrics
+        app: web-metrics
     spec:
       containers:
       - env:
@@ -54,8 +54,8 @@ spec:
               fieldPath: metadata.namespace
         - name: EX_LABELS
           value: '{label1="v1",label2="v2"}'
-        name: web_metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/web_metrics:1.0.2
+        name: web-metrics
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/web-metrics:1.0.2
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
@@ -95,15 +95,15 @@ spec:
             scheme: HTTP
           timeoutSeconds: 3
         volumeMounts:
-        - name: web_metrics_config
-          mountPath: /web_metrics/web_web_metrics/config
+        - name: web-metrics
+          mountPath: /web-metrics/web_web-metrics/config
         ports:
         - containerPort: 5000
           protocol: TCP
       volumes:
         - configMap:
-            name: web_metrics
-          name: web_metrics_config
+            name: web-metrics
+          name: web-metrics
 #      imagePullSecrets:
 #        - name: docker-registry
       restartPolicy: Always
@@ -117,8 +117,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: web_metrics
-  name: web_metrics
+    app: web-metrics
+  name: web-metrics
   namespace: prometheus
 spec:
   ports:
@@ -126,6 +126,6 @@ spec:
     port: 5000
     targetPort: 5000
   selector:
-    app: web_metrics
+    app: web-metrics
   sessionAffinity: None
   type: ClusterIP
