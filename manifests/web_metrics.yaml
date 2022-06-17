@@ -55,7 +55,7 @@ spec:
         - name: EX_LABELS
           value: '{label1="v1",label2="v2"}'
         name: web-metrics
-        image: registry.cn-shanghai.aliyuncs.com/baiyuani/web-metrics:1.0.3
+        image: registry.cn-shanghai.aliyuncs.com/baiyuani/web_metrics:1.0.3
         imagePullPolicy: IfNotPresent
         resources:
           requests: 
