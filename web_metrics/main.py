@@ -55,13 +55,12 @@ def handle_data(name, url):
     code = get_status(url)
     if code is not None:
         try:
-            data_head = "%s_%s_status" % (namespace, name)
-            if not ex_labels:
-                data_label = "{origin=\"%s\",svc=\"%s\",url=\"%s\"}" % (namespace, name, url)
-            else:
+            if ex_labels:
                 ex_labels = ex_labels.strip('{').strip('}')
                 data_label = "{origin=\"%s\",svc=\"%s\",url=\"%s\",%s}" % (namespace, name, url, ex_labels)
-            data_row = "%s%s %d\n" % (data_head, data_label, code)
+            else:
+                data_label = "{origin=\"%s\",svc=\"%s\",url=\"%s\"}" % (namespace, name, url)
+            data_row = "%s_web_status%s %d\n" % (namespace, data_label, code)
             data += data_row
         except:
             logger.error("Return data is failed! because: Data splicing failed.|name: \"%s\"|url: \"%s\"|code: \"%s\"" % (name, url, code))
