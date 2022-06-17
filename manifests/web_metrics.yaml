@@ -3,7 +3,7 @@ data:
   urls.yaml: |-  
     urls:
       baidu: "https://www.baidu.com"
-      nospace: 'https://www.baidu.com'
+      test: 'https://www.baidu.com'
 kind: ConfigMap
 metadata:
   name: web-metrics
