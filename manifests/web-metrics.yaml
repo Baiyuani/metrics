@@ -4,6 +4,7 @@ data:
     urls:
       baidu: "https://www.baidu.com"
       test: 'https://www.baidu.com'
+      error_page: 'https://www.baidu.com/sdasdaqgqeg'
 kind: ConfigMap
 metadata:
   name: web-metrics
