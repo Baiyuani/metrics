@@ -18,18 +18,16 @@ def get_urls(namespace, ex_labels):
             #                         )
             #                  ))
             yaml_data = yaml.load(file, Loader=yaml.FullLoader)["urls"]
-            yaml_data_list = list(yaml_data.items())
-            urls = yaml_data.values()
-            for obj in yaml_data_list:
+            for svc, url in yaml_data.items():
                 if ex_labels is None:
-                    name = '%s_web_status{origin=\"%s\",svc=\"%s\",url=\"%s\"}' % (namespace, namespace, obj[0], obj[1])
+                    name = '%s_web_status{origin=\"%s\",svc=\"%s\",url=\"%s\"}' % (namespace, namespace, svc, url)
                     name_list.append(name)
                 else:
                     ex_labels = ex_labels.strip('{').strip('}')
-                    name = "%s_web_status{origin=\"%s\",svc=\"%s\",url=\"%s\",%s}" % (namespace, namespace, obj[0], obj[1], ex_labels)
+                    name = "%s_web_status{origin=\"%s\",svc=\"%s\",url=\"%s\",%s}" % (namespace, namespace, svc, url, ex_labels)
                     name_list.append(name)
 
-            return list(zip(name_list, urls))
+            return list(zip(name_list, yaml_data.values()))
     except:
         logger.error("file:urls.yaml read faild.")
         exit()

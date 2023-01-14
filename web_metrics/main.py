@@ -41,9 +41,9 @@ def root():
 
 
 if __name__ == '__main__':
-    # app.run(host=host, port=int(port), debug=True)
     server = pywsgi.WSGIServer(
         (host, int(port)),
         app
     )
     server.serve_forever()
+    # app.run(host=host, port=int(port), debug=True)
