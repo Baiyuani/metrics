@@ -18,9 +18,9 @@ def get_urls(namespace, ex_labels):
             #                         )
             #                  ))
             yaml_data = yaml.load(file, Loader=yaml.FullLoader)["urls"]
-            names = yaml_data.keys()
+            yaml_data_list = list(yaml_data.items())
             urls = yaml_data.values()
-            for obj in list(zip(names, urls)):
+            for obj in yaml_data_list:
                 if ex_labels is None:
                     name = '%s_web_status{origin=\"%s\",svc=\"%s\",url=\"%s\"}' % (namespace, namespace, obj[0], obj[1])
                     name_list.append(name)
