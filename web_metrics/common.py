@@ -38,13 +38,13 @@ def after():
     data = ''
 
 
-@logger.catch
 class Metrics:
     def __init__(self, headers, threading_num, urls):
         self.headers = headers
         self.threading_num = threading_num
         self.urls = urls
 
+    @logger.catch
     def get_status(self, url):
         try:
             response = requests.get(url, headers=self.headers)
@@ -53,6 +53,7 @@ class Metrics:
             logger.warning("url: \"%s\" is wrong. Unable to get status_code." % url)
             pass
 
+    @logger.catch
     def main(self, data_label, url):
         global data
         code = self.get_status(url)
@@ -63,6 +64,7 @@ class Metrics:
             logger.error("Return data is failed! because: Data splicing failed. --> url: \"%s\". status_code: \"%s\"" % (url, code))
             pass
 
+    @logger.catch
     def __call__(self):
         Parallel(n_jobs=int(self.threading_num), backend='threading')(
             delayed(lambda args: self.main(args[0], args[1]))(i) for i in self.urls
